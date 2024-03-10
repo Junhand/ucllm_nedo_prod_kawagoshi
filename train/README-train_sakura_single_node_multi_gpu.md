@@ -10,7 +10,7 @@
 
 Before:
 ```sh
-~/ucllm_nedo_dev/
+~/ucllm_nedo_prod_kawagoshi/
 └── train/
     ├── scripts/
     ├── .gitignore
@@ -20,7 +20,7 @@ Before:
 
 After:
 ```sh
-~/ucllm_nedo_dev/
+~/ucllm_nedo_prod_kawagoshi/
 └── train/
     ├── .venv/
     ├── apex/
@@ -53,7 +53,7 @@ $ which conda && echo "====" && conda --version
 ### Step 0-2. Python仮想環境の作成
 
 ```sh
-$ cd ~/ucllm_nedo_dev/train/
+$ cd ~/ucllm_nedo_prod_kawagoshi/train/
 
 # Python仮想環境を作成。
 $ conda create --name .venv python=3.11 -y
@@ -86,7 +86,7 @@ $ conda activate .venv
 ### Step 0-3. パッケージ等のインストール
 
 ```sh
-(.venv) $ cd ~/ucllm_nedo_dev/train/
+(.venv) $ cd ~/ucllm_nedo_prod_kawagoshi/train/
 
 # condaを用いてCUDAを指定のバージョンでインストール。
 # https://anaconda.org/nvidia/cuda-toolkit 
@@ -99,7 +99,7 @@ $ conda activate .venv
 (.venv) $ pip install torch==2.1.0+cu121 torchaudio==2.1.0+cu121 torchvision==0.16.0+cu121 --find-links https://download.pytorch.org/whl/torch_stable.html
 
 # PyTorchを指定のバージョンでインストールした後に、requirements.txtを用いて諸々のパッケージをインストール。
-(.venv) $ pip install -r ~/ucllm_nedo_dev/train/requirements.txt
+(.venv) $ pip install -r ~/ucllm_nedo_prod_kawagoshi/train/requirements.txt
 
 # deepspeedの依存パッケージをインストール。
 (.venv) $ pip install deepspeed-kernels
@@ -116,28 +116,28 @@ $ conda activate .venv
 ### Step 0-4. Megatron-DeepSpeedのインストール
 
 ```sh
-(.venv) $ cd ~/ucllm_nedo_dev/train/
+(.venv) $ cd ~/ucllm_nedo_prod_kawagoshi/train/
 
 # Megatron-DeepSpeedのレポジトリをクローン。
 (.venv) $ git clone https://github.com/hotsuyuki/Megatron-DeepSpeed
 
 # mainブランチではエラーが起きる場合があるため、指定のタグにチェックアウト。
-(.venv) $ cd ~/ucllm_nedo_dev/train/Megatron-DeepSpeed/ && git fetch origin && git checkout refs/tags/ucllm_nedo_dev_v20240205.1.0
+#(.venv) $ cd ~/ucllm_nedo_prod_kawagoshi/train/Megatron-DeepSpeed/ && git fetch origin && git checkout refs/tags/ucllm_nedo_dev_v20240205.1.0
 
 # Megatron-DeepSpeedをインストール。
-(.venv) $ cd ~/ucllm_nedo_dev/train/Megatron-DeepSpeed/ && python setup.py install
+(.venv) $ cd ~/ucllm_nedo_prod_kawagoshi/train/Megatron-DeepSpeed/ && python setup.py install
 ```
 
 ### Step 0-5. apexのインストール
 
 ```sh
-(.venv) $ cd ~/ucllm_nedo_dev/train/
+(.venv) $ cd ~/ucllm_nedo_prod_kawagoshi/train/
 
 # apexのレポジトリをクローン。
 (.venv) $ git clone https://github.com/NVIDIA/apex
 
 # mainブランチではエラーが起きる場合があるため、指定のタグにチェックアウト。
-(.venv) $ cd ~/ucllm_nedo_dev/train/apex/ && git fetch origin && git checkout refs/tags/23.08
+#(.venv) $ cd ~/ucllm_nedo_prod_kawagoshi/train/apex/ && git fetch origin && git checkout refs/tags/23.08
 
 # nvccが対応しているCUDAのバージョンとPyTorchが依存しているCUDAのバージョンが一致していることを確認。
 (.venv) $ which nvcc && echo "====" && nvcc --version && echo "====" && python -c "import torch; print(torch.__version__)"
@@ -147,19 +147,19 @@ $ conda activate .venv
 
 # pipのバージョンが23.1以上の場合のインストール方法で、apexをインストール。
 # ※しばらく時間がかかるので注意。
-(.venv) $ cd ~/ucllm_nedo_dev/train/apex/ && pip install -v --disable-pip-version-check --no-cache-dir --no-build-isolation --config-settings "--build-option=--cpp_ext" --config-settings "--build-option=--cuda_ext" ./
+(.venv) $ cd ~/ucllm_nedo_prod_kawagoshi/train/apex/ && pip install -v --disable-pip-version-check --no-cache-dir --no-build-isolation --config-settings "--build-option=--cpp_ext" --config-settings "--build-option=--cuda_ext" ./
 
 # apexがインストールされていることを確認。
 (.venv) $ pip list | grep "apex"
 
 # apex_C.cpython-311-x86_64-linux-gnu.soが作成されていることを確認。
-(.venv) $ find ~/ucllm_nedo_dev/train/apex/build/lib.linux-x86_64-cpython-311/ -name apex_C.cpython-311-x86_64-linux-gnu.so
+(.venv) $ find ~/ucllm_nedo_prod_kawagoshi/train/apex/build/lib.linux-x86_64-cpython-311/ -name apex_C.cpython-311-x86_64-linux-gnu.so
 ```
 
 ### Step 0-6. Flash Attention 2のインストール
 
 ```sh
-(.venv) $ cd ~/ucllm_nedo_dev/train/
+(.venv) $ cd ~/ucllm_nedo_prod_kawagoshi/train/
 
 # Flash Attention 2のインストールに必要なninjaを念のため再インストール。
 (.venv) $ pip uninstall ninja -y && pip install ninja==1.11.1
@@ -174,13 +174,13 @@ $ conda activate .venv
 ### Step 0-7. llm-jp-sftのインストール
 
 ```sh
-(.venv) $ cd ~/ucllm_nedo_dev/train/
+(.venv) $ cd ~/ucllm_nedo_prod_kawagoshi/train/
 
 # llm-jp-sftのレポジトリをクローン。
 (.venv) $ git clone https://github.com/hotsuyuki/llm-jp-sft
 
 # mainブランチではエラーが起きる場合があるため、指定のタグにチェックアウト。
-(.venv) $ cd ~/ucllm_nedo_dev/train/llm-jp-sft/ && git fetch origin && git checkout refs/tags/ucllm_nedo_dev_v20240208.1.0
+#(.venv) $ cd ~/ucllm_nedo_prod_kawagoshi/train/llm-jp-sft/ && git fetch origin && git checkout refs/tags/ucllm_nedo_dev_v20240208.1.0
 ```
 
 ## Step 1. トークナイザーの学習
@@ -188,7 +188,7 @@ $ conda activate .venv
 ### Step 1-1. 学習の実行
 
 ```sh
-(.venv) $ cd ~/ucllm_nedo_dev/train/scripts/step1_train_tokenizer/
+(.venv) $ cd ~/ucllm_nedo_prod_kawagoshi/train/scripts/step1_train_tokenizer/
 
 # 学習スクリプトを実行。
 (.venv) $ python ./train_sentencepiece_tokenizer.py \
@@ -197,7 +197,7 @@ $ conda activate .venv
     --vocab_size 2000
 
 # 出力された学習済みトークナイザーを出力ディレクトリへ移動。
-(.venv) $ mkdir -p ~/ucllm_nedo_dev/train/output/step1_train_tokenizer/botchan/ && mv ./botchan.model ./botchan.vocab --target-directory ~/ucllm_nedo_dev/train/output/step1_train_tokenizer/botchan/
+(.venv) $ mkdir -p ~/ucllm_nedo_prod_kawagoshi/train/output/step1_train_tokenizer/botchan/ && mv ./botchan.model ./botchan.vocab --target-directory ~/ucllm_nedo_prod_kawagoshi/train/output/step1_train_tokenizer/botchan/
 ```
 
 ## Step 2. モデルの事前学習
@@ -205,7 +205,7 @@ $ conda activate .venv
 ### Step 2-1. 事前学習の実行
 
 ```sh
-(.venv) $ cd ~/ucllm_nedo_dev/train/scripts/step2_pretrain_model/
+(.venv) $ cd ~/ucllm_nedo_prod_kawagoshi/train/scripts/step2_pretrain_model/
 
 # W&Bにログイン。
 # https://wandb.ai/settings --> Danger Zone --> API keys --> APIキーをコピペ。
@@ -216,8 +216,8 @@ $ conda activate .venv
 
 # 事前学習スクリプトを実行。
 (.venv) $ bash ./sakrua_node-1_gpu-8/dataset-arxiv_tokenizer-sentencepiece_model-gpt_0.125B/zero-1_dp-8_pp-1_tp-1_flashattn2-on.sh \
-    --input_tokenizer_file ~/ucllm_nedo_dev/train/output/step1_train_tokenizer/botchan/botchan.model \
-    --output_model_dir ~/ucllm_nedo_dev/train/output/step2_pretrain_model/ \
+    --input_tokenizer_file ~/ucllm_nedo_prod_kawagoshi/train/output/step1_train_tokenizer/botchan/botchan.model \
+    --output_model_dir ~/ucllm_nedo_prod_kawagoshi/train/output/step2_pretrain_model/ \
     --save_interval 1000
 ```
 
@@ -236,7 +236,7 @@ $ conda activate .venv
 (.venv) $ which python3-config
 
 # ~/ucllm_nedo_dev/train/Megatron-DeepSpeed/megatron/data/Makefileのpython3-configのパスを、上記のwhichコマンドで出力された絶対パスに変更。
-(.venv) $ vim ~/ucllm_nedo_dev/train/Megatron-DeepSpeed/megatron/data/Makefile
+(.venv) $ vim ~/ucllm_nedo_prod_kawagoshi/train/Megatron-DeepSpeed/megatron/data/Makefile
 """
 # Before
 LIBEXT = $(shell python3-config --extension-suffix)
@@ -246,10 +246,10 @@ LIBEXT = $(shell /absolute/path/to/python3-config --extension-suffix)
 """
 
 # ~/ucllm_nedo_dev/train/Megatron-DeepSpeed/megatron/data/にてmakeコマンドを実行。
-(.venv) $ cd ~/ucllm_nedo_dev/train/Megatron-DeepSpeed/megatron/data/ && make
+(.venv) $ cd ~/ucllm_nedo_prod_kawagoshi/train/Megatron-DeepSpeed/megatron/data/ && make
 
 # helpers.cpython-311-x86_64-linux-gnu.soが作成されていることを確認。
-(.venv) $ find ~/ucllm_nedo_dev/train/Megatron-DeepSpeed/megatron/data/ -name helpers.cpython-311-x86_64-linux-gnu.so
+(.venv) $ find ~/ucllm_nedo_prod_kawagoshi/train/Megatron-DeepSpeed/megatron/data/ -name helpers.cpython-311-x86_64-linux-gnu.so
 ```
 
 参考リンク: <br/>
@@ -266,7 +266,7 @@ LIBEXT = $(shell /absolute/path/to/python3-config --extension-suffix)
 
 ```sh
 # ~/ucllm_nedo_dev/train/Megatron-DeepSpeed/megatron/fused_kernels/build/を削除。
-(.venv) $ rm -rf ~/ucllm_nedo_dev/train/Megatron-DeepSpeed/megatron/fused_kernels/build/
+(.venv) $ rm -rf ~/ucllm_nedo_prod_kawagoshi/train/Megatron-DeepSpeed/megatron/fused_kernels/build/
 ```
 
 参考リンク: <br/>
@@ -277,19 +277,19 @@ LIBEXT = $(shell /absolute/path/to/python3-config --extension-suffix)
 ### Step 3-1. トークナイザーと事前学習済みモデルのHuggingFace Transformers形式への変換
 
 ```sh
-(.venv) $ cd ~/ucllm_nedo_dev/train/scripts/step3_upload_pretrained_model/
+(.venv) $ cd ~/ucllm_nedo_prod_kawagoshi/train/scripts/step3_upload_pretrained_model/
 
 # 変換スクリプトを実行。
 (.venv) $ bash ./convert_tokenizer_and_pretrained_model_to_huggingface_transformers.sh \
-    --input_tokenizer_file ~/ucllm_nedo_dev/train/output/step1_train_tokenizer/botchan/botchan.model \
-    --input_model_dir ~/ucllm_nedo_dev/train/output/step2_pretrain_model/checkpoint/gpt_0.125B_${YOUR_JOBNAME}/global_step1000/ \
-    --output_tokenizer_and_model_dir ~/ucllm_nedo_dev/train/output/step3_upload_pretrained_model/gpt_0.125B_global_step1000/
+    --input_tokenizer_file ~/ucllm_nedo_prod_kawagoshi/train/output/step1_train_tokenizer/botchan/botchan.model \
+    --input_model_dir ~/ucllm_nedo_prod_kawagoshi/train/output/step2_pretrain_model/checkpoint/gpt_0.125B_${YOUR_JOBNAME}/global_step1000/ \
+    --output_tokenizer_and_model_dir ~/ucllm_nedo_prod_kawagoshi/train/output/step3_upload_pretrained_model/gpt_0.125B_global_step1000/
 ```
 
 ### Step 3-2. トークナイザーと事前学習済みモデルのHuggingFace Hubへのアップロード
 
 ```sh
-(.venv) $ cd ~/ucllm_nedo_dev/train/scripts/step3_upload_pretrained_model/
+(.venv) $ cd ~/ucllm_nedo_prod_kawagoshi/train/scripts/step3_upload_pretrained_model/
 
 # HuggingFaceにログイン。
 # https://huggingface.co/settings/tokens --> 書き込み権限ありのAPIキーをコピペ。
@@ -300,7 +300,7 @@ LIBEXT = $(shell /absolute/path/to/python3-config --extension-suffix)
 
 # アップロードスクリプトを実行。
 (.venv) $ python ./upload_tokenizer_and_pretrained_model_to_huggingface_hub.py \
-    --input_tokenizer_and_model_dir ~/ucllm_nedo_dev/train/output/step3_upload_pretrained_model/gpt_0.125B_global_step1000/ \
+    --input_tokenizer_and_model_dir ~/ucllm_nedo_prod_kawagoshi/train/output/step3_upload_pretrained_model/gpt_0.125B_global_step1000/ \
     --output_model_name gpt_0.125B_global_step1000 \
     --test_prompt_text "Once upon a time,"
 ```
@@ -310,17 +310,17 @@ LIBEXT = $(shell /absolute/path/to/python3-config --extension-suffix)
 ### Step 4-1. ファインチューニングの実行
 
 ```sh
-(.venv) $ cd ~/ucllm_nedo_dev/train/scripts/step4_finetune_model/
+(.venv) $ cd ~/ucllm_nedo_prod_kawagoshi/train/scripts/step4_finetune_model/
 
 # ファインチューニングスクリプトを実行。 (HuggingFaceにアップロードした事前学習モデルをダウンロードして使用する場合)
 (.venv) $ bash ./sakrua_node-1_gpu-8/dataset-openassistant_tokenizer-sentencepiece_model-gpt_0.125B/launcher-accelerate_zero-none.sh \
     --input_model_name_or_path ${YOUR_HUGGINGFACE_USERNAME}/gpt_0.125B_global_step1000 \
-    --output_tokenizer_and_model_dir ~/ucllm_nedo_dev/train/output/step4_finetune_model/gpt_0.125B_global_step1000_openassistant/
+    --output_tokenizer_and_model_dir ~/ucllm_nedo_prod_kawagoshi/train/output/step4_finetune_model/gpt_0.125B_global_step1000_openassistant/
 
 # ファインチューニングスクリプトを実行。 (ローカルに保存してある事前学習モデルをそのまま使用する場合)
 (.venv) $ bash ./sakrua_node-1_gpu-8/dataset-openassistant_tokenizer-sentencepiece_model-gpt_0.125B/launcher-accelerate_zero-none.sh \
-    --input_model_name_or_path ~/ucllm_nedo_dev/train/output/step3_upload_pretrained_model/gpt_0.125B_global_step1000/ \
-    --output_tokenizer_and_model_dir ~/ucllm_nedo_dev/train/output/step4_finetune_model/gpt_0.125B_global_step1000_openassistant/
+    --input_model_name_or_path ~/ucllm_nedo_prod_kawagoshi/train/output/step3_upload_pretrained_model/gpt_0.125B_global_step1000/ \
+    --output_tokenizer_and_model_dir ~/ucllm_nedo_prod_kawagoshi/train/output/step4_finetune_model/gpt_0.125B_global_step1000_openassistant/
 ```
 
 ## Step 5. ファインチューニング済みモデルのアップロード
@@ -328,14 +328,14 @@ LIBEXT = $(shell /absolute/path/to/python3-config --extension-suffix)
 ### Step 5-1. トークナイザーとファインチューニング済みモデルのHuggingFace Hubへのアップロード
 
 ```sh
-(.venv) $ cd ~/ucllm_nedo_dev/train/scripts/step5_upload_finetuned_model/
+(.venv) $ cd ~/ucllm_nedo_prod_kawagoshi/train/scripts/step5_upload_finetuned_model/
 
 # HuggingFaceにログインしていることを確認。
 (.venv) $ huggingface-cli whoami
 
 # アップロードスクリプトを実行。
 (.venv) $ python ./upload_tokenizer_and_finetuned_model_to_huggingface_hub.py \
-    --input_tokenizer_and_model_dir ~/ucllm_nedo_dev/train/output/step4_finetune_model/gpt_0.125B_global_step1000_openassistant/ \
+    --input_tokenizer_and_model_dir ~/ucllm_nedo_prod_kawagoshi/train/output/step4_finetune_model/gpt_0.125B_global_step1000_openassistant/ \
     --output_model_name gpt_0.125B_global_step1000_openassistant \
     --test_prompt_text "Once upon a time,"
 ```
