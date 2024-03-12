@@ -282,8 +282,8 @@ LIBEXT = $(shell /absolute/path/to/python3-config --extension-suffix)
 # 変換スクリプトを実行。
 (.venv) $ bash ./convert_tokenizer_and_pretrained_model_to_huggingface_transformers.sh \
     --input_tokenizer_file ~/ucllm_nedo_prod_kawagoshi/train/output/step1_train_tokenizer/botchan/botchan.model \
-    --input_model_dir ~/ucllm_nedo_prod_kawagoshi/train/output/step2_pretrain_model/checkpoint/gpt_0.125B_${YOUR_JOBNAME}/global_step1000/ \
-    --output_tokenizer_and_model_dir ~/ucllm_nedo_prod_kawagoshi/train/output/step3_upload_pretrained_model/gpt_0.125B_global_step1000/
+    --input_model_dir ~/ucllm_nedo_prod_kawagoshi/train/output/step2_pretrain_model/checkpoint/gpt_0.125B_${YOUR_JOBNAME}/global_step10/ \
+    --output_tokenizer_and_model_dir ~/ucllm_nedo_prod_kawagoshi/train/output/step3_upload_pretrained_model/gpt_0.125B_global_step10/
 ```
 
 ### Step 3-2. トークナイザーと事前学習済みモデルのHuggingFace Hubへのアップロード
@@ -300,8 +300,8 @@ LIBEXT = $(shell /absolute/path/to/python3-config --extension-suffix)
 
 # アップロードスクリプトを実行。
 (.venv) $ python ./upload_tokenizer_and_pretrained_model_to_huggingface_hub.py \
-    --input_tokenizer_and_model_dir ~/ucllm_nedo_prod_kawagoshi/train/output/step3_upload_pretrained_model/gpt_0.125B_global_step1000/ \
-    --output_model_name gpt_0.125B_global_step1000 \
+    --input_tokenizer_and_model_dir ~/ucllm_nedo_prod_kawagoshi/train/output/step3_upload_pretrained_model/gpt_0.125B_global_step10/ \
+    --output_model_name gpt_0.125B_global_step10 \
     --test_prompt_text "Once upon a time,"
 ```
 
