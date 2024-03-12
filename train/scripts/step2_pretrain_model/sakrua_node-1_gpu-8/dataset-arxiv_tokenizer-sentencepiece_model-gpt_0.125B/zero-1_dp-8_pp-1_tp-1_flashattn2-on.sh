@@ -65,7 +65,7 @@ model_size=0.125
 num_layers=12
 hidden_size=768
 num_attn_heads=12
-global_batch_size=256
+global_batch_size=32 #256
 lr=6.0e-4
 min_lr=1.0e-6
 init_std=0.02
@@ -323,7 +323,7 @@ megatron_options=" \
     --load ${checkpoint_path} \
     --save ${checkpoint_path} \
     --no-async-tensor-model-parallel-allreduce \
-    --use-flash-attn-v2 \
+    --use-flash-attn \
     --tensorboard-queue-size 1 \
     --log-timers-to-tensorboard \
     --log-batch-size-to-tensorboard \
