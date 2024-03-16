@@ -9,7 +9,7 @@ def exec_hojichar_deduplication(lines: list[str], output_base: str, stats: list[
     remained_lines = []
     cleaner = Compose([
         document_filters.JSONLoader(ignore=True),
-        deduplication.GenerateDedupLSH(),
+        deduplication.GenerateDedupLSH(n_gram=5, n_minhash=200, n_buckets=20, bucket_size=10),
         deduplication.LSHDeduplicator(
             online_dedup=True,
             store_blacklist=True
@@ -65,14 +65,14 @@ def dedup_minhashlsh(input_dir: str, output_base: str):
 def main():
     parser = argparse.ArgumentParser(description='Process some documents.')
     parser.add_argument('--input_dir', type=str,
-                        help='The input directory containing documents to process', required=True)
+                        help='The input directory containing documents to process', required=False, default="/home/ubuntu/ucllm_nedo_prod_kawagoshi/data_management/output/filterd_documents")
     parser.add_argument('--output_dir', type=str,
-                        help='The input file containing documents to process', required=False, default="./tmp/output")
+                        help='The input file containing documents to process', required=False, default="/home/ubuntu/ucllm_nedo_prod_kawagoshi/data_management/output")
     args = parser.parse_args()
 
-    start = datetime.now()
-    output_base = os.path.join(args.output_dir, start.strftime("%Y%m%d%H%M%S"))
-
+    #start = datetime.now()
+    #output_base = os.path.join(args.output_dir, start.strftime("%Y%m%d%H%M%S"))
+    output_base = os.path.join(args.output_dir, "debuped_documents")
     dedup_minhashlsh(input_dir=args.input_dir, output_base=output_base)
 
 
