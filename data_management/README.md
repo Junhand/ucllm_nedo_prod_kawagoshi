@@ -35,6 +35,11 @@ $ cd ~/ucllm_nedo_dev/data_management
 $ ./bin/setup
 ```
 
+fastTextのダウンロード
+```sh
+pip install fasttext-langdetect
+```
+
 ## 1. Download datasets
 
 ### 日本語[C4](https://huggingface.co/allenai/c4)
