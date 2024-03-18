@@ -9,7 +9,7 @@ def exec_hojichar_deduplication(lines: list[str], output_base: str, stats: list[
     remained_lines = []
     cleaner = Compose([
         document_filters.JSONLoader(ignore=True),
-        deduplication.GenerateDedupLSH(),
+        deduplication.GenerateDedupLSH(n_gram=5, n_minhash=200, n_buckets=20, bucket_size=10),
         deduplication.LSHDeduplicator(
             online_dedup=True,
             store_blacklist=True
@@ -70,9 +70,9 @@ def main():
                         help='The input file containing documents to process', required=False, default="~/ucllm_nedo_prod_kawagoshi/pipeline/4_dedup_and_upload_datasets/output")
     args = parser.parse_args()
 
-    start = datetime.now()
-    output_base = os.path.join(args.output_dir, start.strftime("%Y%m%d%H%M%S"))
-
+    #start = datetime.now()
+    #output_base = os.path.join(args.output_dir, start.strftime("%Y%m%d%H%M%S"))
+    output_base = os.path.join(args.output_dir, "debuped_documents")
     dedup_minhashlsh(input_dir=args.input_dir, output_base=output_base)
 
 

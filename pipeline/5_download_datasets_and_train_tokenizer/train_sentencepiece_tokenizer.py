@@ -1,7 +1,7 @@
 # Appends a path to import python scripts that are in other directories.
 import os
 import sys
-sys.path.append(os.path.join(os.environ["HOME"], "ucllm_nedo_dev/train/scripts/common/"))
+sys.path.append(os.path.join(os.environ["HOME"], "~/ucllm_nedo_prod_kawagoshi/pipeline/common"))
 
 import argparse
 import sentencepiece as spm
@@ -10,7 +10,7 @@ from special_token_list import BOS_TOKEN, EOS_TOKEN, PAD_TOKEN, CLS_TOKEN, SEP_T
 
 def parse_arguments():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--input", type=str, required=True)
+    parser.add_argument("--input", type=str, required=False, default="~/ucllm_nedo_prod_kawagoshi/pipeline/4_dedup_and_upload_datasets/output")
     parser.add_argument("--model_prefix", type=str, required=True)
     parser.add_argument("--vocab_size", type=int, required=True)
     parser.add_argument("--character_coverage", type=float, default=0.9995)
