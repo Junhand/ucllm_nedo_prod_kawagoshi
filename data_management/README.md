@@ -6,27 +6,32 @@ _引用: A Survey of Large Language Models, https://arxiv.org/pdf/2303.18223.pdf
 
 ## 環境構築
 
-### Pythonのバージョン確認
-
-Python>=3.11 がインストールされているものとする
-
-確認方法は以下
+### condaによる仮想環境の構築
 ```sh
-$ python --version
-// Python 3.11.7
-```
+$ cd ~/
 
-もしPythonがインストールされていない場合は[Python.jp](https://www.python.jp/install/centos/index.html)を参考にインストールする
+# condaのインストール先ディレクトリを作成。
+$ mkdir -p ~/miniconda3/ && cd ~/miniconda3/
 
-### 必要なライブラリのダウンロード
+# condaをインストール。
+$ wget https://repo.anaconda.com/miniconda/Miniconda3-py310_23.10.0-1-Linux-x86_64.sh && bash Miniconda3-py310_23.10.0-1-Linux-x86_64.sh -b -u -p ~/miniconda3/
 
-preprocessingディレクトリにいることを確認した上でセットアップを行なってください
+# インストールしたcondaを有効化。
+$ source ~/miniconda3/etc/profile.d/conda.sh
 
-```sh
-$ pwd
-// ~/ucllm_redo_dev/preprocessing
-$ sudo apt-get install git-lfs
-$ sudo apt-get install wget
+# condaコマンドが使えることを確認。
+$ which conda && echo "====" && conda --version
+
+# Python仮想環境を作成。
+$ conda create --name .venv_data python=3.11.7 -y
+
+# 作成したPython仮想環境を有効化。
+$ conda activate .venv_data
+
+# データ取得、加工の作業ディレクトリへ移動
+$ cd ~/ucllm_nedo_dev/data_management
+
+# pythonのライブラリ群をインストール
 $ ./bin/setup
 ```
 
@@ -36,12 +41,12 @@ $ ./bin/setup
 
 部分的なダウンロードを行う場合
 ```sh
-$ python -m preprocessing.download_dataset --dataset=c4 --split=train --output_base=output --index_from=0 --index_to=10
+$ python -m preprocessing.download_dataset --dataset=c4 --split=train --output_base=tmp/output --index_from=0 --index_to=5
 ```
 
 全日本語mC4をダウンロードする場合
 ```sh
-$ ./bin/download_mc4_ja
+$ ./bin/download_mc4_ja tmp/output
 ```
 
 ### [wikipedia dump](https://dumps.wikimedia.org/jawiki/)
@@ -54,7 +59,7 @@ $ python -m preprocessing.download_dataset --dataset=wikipedia --split=20240301
 splitに指定可能な値は[wikipedia dumpのindex](https://dumps.wikimedia.org/jawiki/)に指定されているディレクトリ
 
 
-### [Redpajama]()
+### [Redpajama-1T](https://huggingface.co/datasets/togethercomputer/RedPajama-Data-1T)
 
 全件ダウンロード(※注 巨大なデータセットです。ダウンロード先、実行時間にご注意ください)
 
@@ -76,6 +81,20 @@ splitに指定可能なデータセットは以下
 - github
 - stackexchange
 - wikipedia
+
+[Github](https://github.com/togethercomputer/RedPajama-Data)にFiltering、Dedupを含めたコードもあるので参考にして下さい
+
+### [Redpajama v2](https://huggingface.co/datasets/togethercomputer/RedPajama-Data-V2)
+
+Redpajamaの後継バージョンです
+
+
+```sh
+$ python -m preprocessing.download_dataset --dataset=redpajama_v2 --snapshot=2023-06 --partition=head_middle --language=en
+```
+
+その他ダウンロード可能なスナップショット、パーティション、言語等の詳しい使い方はHugging Faceを参照してください
+加工処理用(quality signals、minhash signatures, duplicate ids)のデータセットもダウンロード可能なので同様にサイトを参照してください
 
 ## 2. Data processing
 
@@ -101,7 +120,7 @@ $ python -m preprocessing.filtering --input_dir=input --output_dir=output
 興味のある方はReferencesを参照してください。
 
 ```sh
-$ python -m preprocessing.dedup --input_dir=input --output_dir=output
+$ python -m preprocessing.dedup --input_dir=input --output_dir=tmp/output
 ```
 
 ### PII Masking
@@ -117,7 +136,35 @@ cleaner = Compose([
 ])
 ```
 
-## 3. Post Training
+## 3. JSONLファイルのマージ
+
+以下のコマンドで複数のJSONLファイルを1つのJSONLファイルにまとめることができます
+学習用のデータセットを作成する時にご利用ください
+
+```sh
+$ bin/concat {input_dir} {output_dir}
+```
+
+以下のようなディレクトリ構造でファイルが置かれているとします
+```
+dataset/wikipedia/0.jsonl
+dataset/wikipedia/1.jsonl
+dataset/wikipedia/2.jsonl
+```
+
+このコマンドを利用して1つのファイルにまとめることができます
+
+```sh
+$ bin/concat dataset/wikipedia dataset/wikipedia/merged
+```
+
+出力されるファイルは以下のとおりです
+
+```
+dataset/wikipedia/merged/merged.jsonl
+```
+
+## 4. Post Training
 
 ### [databricks dolly Japanese](https://huggingface.co/datasets/taka-yayoi/databricks-dolly-15k-ja)
 

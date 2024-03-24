@@ -31,7 +31,7 @@ def process_dump(page, path, file_index):
         output_file.write(article_json + '\n')
 
 
-def download_dataset(date: str, output_base: str = "output", lang: str = "is") -> None:
+def download_dataset(date: str, output_base: str = "output", lang: str = "ja") -> None:
     filename = f"{lang}wiki-{date}-pages-articles-multistream.xml.bz2"
 
     dump_path = os.path.join(output_base, f"tmp/wikipedia/{date}/{lang}")

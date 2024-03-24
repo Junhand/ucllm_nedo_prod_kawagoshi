@@ -67,8 +67,7 @@ def filtering(input_dir: str, output_base: str):
     with open(os.path.join(output_base, "results.filtering.jsonl"), "w", encoding="utf8") as writer:
         for _, lines in file_lines.items():
             for line in lines:
-                json.dump(line, writer, ensure_ascii=False)
-                writer.write("\n")
+                writer.write(line + "\n")
 
     with open(os.path.join(output_base, "stats.filtering.jsonl"), "w", encoding="utf8") as writer:
         for stat in stats:

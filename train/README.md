@@ -7,3 +7,6 @@
   * [README-train_abci_multi_node_multi_gpu.md](./README-train_abci_multi_node_multi_gpu.md)
 * さくらデータセンター
   * [README-train_sakura_single_node_multi_gpu.md](./README-train_sakura_single_node_multi_gpu.md)
+* GCPプレ環境
+  * [README-train_gcp_play_single_node_multi_gpu.md](./README-train_gcp_play_single_node_multi_gpu.md)
+  * [README-train_gcp_play_multi_node_multi_gpu.md](./README-train_gcp_play_multi_node_multi_gpu.md)
